@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - AIJobMatch</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+        }
+
+        .navbar {
+            background: rgba(26, 26, 46, 0.95);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: #00d4ff;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            margin-left: 2rem;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: #00d4ff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .profile-header {
+            background: rgba(26, 26, 46, 0.6);
+            padding: 2.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00d4ff 0%, #7b2ff7 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            font-weight: bold;
+        }
+
+        .profile-info h1 {
+            color: #e0e0e0;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-info p {
+            color: #b0b0b0;
+            margin-bottom: 0.3rem;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(26, 26, 46, 0.6);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(123, 47, 247, 0.3);
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #00d4ff 0%, #7b2ff7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: #b0b0b0;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .profile-sections {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .section {
+            background: rgba(26, 26, 46, 0.6);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .section h2 {
+            color: #00d4ff;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #b0b0b0;
+            font-weight: 500;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 0.9rem;
+            background: rgba(15, 12, 41, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            font-size: 1rem;
+            color: #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #666;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn {
+            padding: 0.9rem 2rem;
+            background: linear-gradient(135deg, #00d4ff 0%, #7b2ff7 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid #00d4ff;
+            color: #00d4ff;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .skill-tag {
+            background: rgba(0, 212, 255, 0.2);
+            border: 1px solid rgba(0, 212, 255, 0.4);
+            padding: 0.6rem 1rem;
+            border-radius: 20px;
+            text-align: center;
+            color: #00d4ff;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .skill-tag .remove {
+            cursor: pointer;
+            margin-left: 0.5rem;
+            color: #ff6b6b;
+        }
+
+        .add-skill-form {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .add-skill-form input {
+            flex: 1;
+        }
+
+        .message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .message.success {
+            background: rgba(50, 255, 50, 0.2);
+            color: #51cf66;
+            border: 1px solid rgba(50, 255, 50, 0.3);
+        }
+
+        .message.error {
+            background: rgba(255, 50, 50, 0.2);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 50, 50, 0.3);
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="/" class="logo">🎯 AIJobMatch</a>
+            <div class="nav-links">
+                <a href="/dashboard">Dashboard</a>
+                <a href="/jobs">Browse Jobs</a>
+                <a href="/resume">My Resume</a>
+                <a href="/applications">Applications</a>
+                <a href="/profile">Profile</a>
+                <a onclick="logout()">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="profile-header">
+            <div class="profile-avatar" id="avatarInitials">U</div>
+            <div class="profile-info">
+                <h1 id="profileName">User Name</h1>
+                <p id="profileEmail">user@example.com</p>
+                <p id="profilePhone">+1234567890</p>
+                <p style="color: #888; font-size: 0.9rem;">Member since <span id="memberSince">2026</span></p>
+            </div>
+        </div>
+
+        <div class="profile-stats">
+            <div class="stat-card">
+                <div class="stat-number" id="profileViews">0</div>
+                <div class="stat-label">Profile Views</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalApplications">0</div>
+                <div class="stat-label">Total Applications</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="savedJobs">0</div>
+                <div class="stat-label">Saved Jobs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="skillsCount">0</div>
+                <div class="stat-label">Skills</div>
+            </div>
+        </div>
+
+        <div class="profile-sections">
+            <div class="section">
+                <h2>
+                    Personal Information
+                    <button class="btn btn-secondary" onclick="toggleEdit('personal')">Edit</button>
+                </h2>
+                <div id="message-personal" class="message"></div>
+                <form id="personalInfoForm">
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            <input type="text" id="fullName" name="fullName" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" disabled>
+                        </div>
+                    </div>
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <input type="tel" id="phone" name="phone" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="location">Location</label>
+                            <input type="text" id="location" name="location" placeholder="City, Country" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="bio">Bio</label>
+                        <textarea id="bio" name="bio" placeholder="Tell us about yourself..." disabled></textarea>
+                    </div>
+                    <button type="submit" class="btn" id="savePersonalBtn" style="display: none;">Save Changes</button>
+                </form>
+            </div>
+
+            <div class="section">
+                <h2>Skills</h2>
+                <div class="skills-grid" id="skillsList">
+                    <!-- Skills will be populated here -->
+                </div>
+                <div class="add-skill-form">
+                    <input type="text" id="newSkill" placeholder="Add a new skill...">
+                    <button class="btn" onclick="addSkill()">Add Skill</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Change Password</h2>
+                <div id="message-password" class="message"></div>
+                <form id="passwordForm">
+                    <div class="form-group">
+                        <label for="currentPassword">Current Password</label>
+                        <input type="password" id="currentPassword" name="currentPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">New Password</label>
+                        <input type="password" id="newPassword" name="newPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm New Password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required>
+                    </div>
+                    <button type="submit" class="btn">Update Password</button>
+                </form>
+            </div>
+
+            <div class="section">
+                <h2>Account Settings</h2>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="emailNotifications" checked>
+                        Receive email notifications for new job matches
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="applicationUpdates" checked>
+                        Get updates on application status
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="weeklyDigest" checked>
+                        Receive weekly job digest
+                    </label>
+                </div>
+                <button class="btn" onclick="saveSettings()">Save Settings</button>
+                <button class="btn btn-danger" onclick="deleteAccount()" style="margin-left: 1rem;">Delete
+                    Account</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isEditingPersonal = false;
+        let userSkills = [];
+
+        async function loadProfile() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
+
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+            // Set basic info
+            document.getElementById('profileName').textContent = user.fullName || 'User';
+            document.getElementById('profileEmail').textContent = user.email || '';
+            document.getElementById('profilePhone').textContent = user.phone || 'Not provided';
+
+            // Set avatar initials
+            const initials = (user.fullName || 'U').split(' ').map(n => n[0]).join('').toUpperCase();
+            document.getElementById('avatarInitials').textContent = initials;
+
+            // Set form values
+            document.getElementById('fullName').value = user.fullName || '';
+            document.getElementById('email').value = user.email || '';
+            document.getElementById('phone').value = user.phone || '';
+
+            // Load additional profile data
+            try {
+                const response = await fetch('/api/profile', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('location').value = data.location || '';
+                    document.getElementById('bio').value = data.bio || '';
+                    document.getElementById('profileViews').textContent = data.profileViews || 0;
+                    document.getElementById('totalApplications').textContent = data.totalApplications || 0;
+                    document.getElementById('savedJobs').textContent = data.savedJobs || 0;
+
+                    if (data.skills) {
+                        userSkills = data.skills;
+                        displaySkills();
+                    }
+
+                    if (data.createdAt) {
+                        const year = new Date(data.createdAt).getFullYear();
+                        document.getElementById('memberSince').textContent = year;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+
+        function toggleEdit(section) {
+            if (section === 'personal') {
+                isEditingPersonal = !isEditingPersonal;
+                const inputs = document.querySelectorAll('#personalInfoForm input, #personalInfoForm textarea');
+                const saveBtn = document.getElementById('savePersonalBtn');
+
+                inputs.forEach(input => {
+                    if (input.id !== 'email') { // Email should not be editable
+                        input.disabled = !isEditingPersonal;
+                    }
+                });
+
+                saveBtn.style.display = isEditingPersonal ? 'block' : 'none';
+            }
+        }
+
+        document.getElementById('personalInfoForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const token = localStorage.getItem('token');
+            const messageDiv = document.getElementById('message-personal');
+
+            const data = {
+                fullName: document.getElementById('fullName').value,
+                phone: document.getElementById('phone').value,
+                location: document.getElementById('location').value,
+                bio: document.getElementById('bio').value
+            };
+
+            try {
+                const response = await fetch('/api/profile', {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    showMessage('message-personal', 'Profile updated successfully!', 'success');
+                    toggleEdit('personal');
+
+                    // Update localStorage
+                    const user = JSON.parse(localStorage.getItem('user') || '{}');
+                    user.fullName = data.fullName;
+                    user.phone = data.phone;
+                    localStorage.setItem('user', JSON.stringify(user));
+
+                    loadProfile();
+                } else {
+                    showMessage('message-personal', 'Failed to update profile', 'error');
+                }
+            } catch (error) {
+                showMessage('message-personal', 'An error occurred', 'error');
+            }
+        });
+
+        document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const token = localStorage.getItem('token');
+            const messageDiv = document.getElementById('message-password');
+
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (newPassword !== confirmPassword) {
+                showMessage('message-password', 'Passwords do not match', 'error');
+                return;
+            }
+
+            const data = {
+                currentPassword: document.getElementById('currentPassword').value,
+                newPassword: newPassword
+            };
+
+            try {
+                const response = await fetch('/api/profile/password', {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    showMessage('message-password', 'Password updated successfully!', 'success');
+                    document.getElementById('passwordForm').reset();
+                } else {
+                    const error = await response.json();
+                    showMessage('message-password', error.message || 'Failed to update password', 'error');
+                }
+            } catch (error) {
+                showMessage('message-password', 'An error occurred', 'error');
+            }
+        });
+
+        function displaySkills() {
+            const skillsList = document.getElementById('skillsList');
+            document.getElementById('skillsCount').textContent = userSkills.length;
+
+            skillsList.innerHTML = userSkills.map(skill => `
+                <div class="skill-tag">
+                    ${skill}
+                    <span class="remove" onclick="removeSkill('${skill}')">×</span>
+                </div>
+            `).join('');
+        }
+
+        async function addSkill() {
+            const input = document.getElementById('newSkill');
+            const skill = input.value.trim();
+
+            if (!skill) return;
+
+            if (userSkills.includes(skill)) {
+                alert('Skill already added');
+                return;
+            }
+
+            userSkills.push(skill);
+            displaySkills();
+            input.value = '';
+
+            // Save to backend
+            const token = localStorage.getItem('token');
+            await fetch('/api/profile/skills', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ skill })
+            });
+        }
+
+        async function removeSkill(skill) {
+            userSkills = userSkills.filter(s => s !== skill);
+            displaySkills();
+
+            // Remove from backend
+            const token = localStorage.getItem('token');
+            await fetch(`/api/profile/skills/${encodeURIComponent(skill)}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+        }
+
+        async function saveSettings() {
+            const token = localStorage.getItem('token');
+            const settings = {
+                emailNotifications: document.getElementById('emailNotifications').checked,
+                applicationUpdates: document.getElementById('applicationUpdates').checked,
+                weeklyDigest: document.getElementById('weeklyDigest').checked
+            };
+
+            try {
+                const response = await fetch('/api/profile/settings', {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(settings)
+                });
+
+                if (response.ok) {
+                    alert('Settings saved successfully!');
+                }
+            } catch (error) {
+                alert('Failed to save settings');
+            }
+        }
+
+        function deleteAccount() {
+            if (!confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                return;
+            }
+
+            if (!confirm('This will permanently delete all your data. Are you absolutely sure?')) {
+                return;
+            }
+
+            const token = localStorage.getItem('token');
+            fetch('/api/profile', {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }).then(response => {
+                if (response.ok) {
+                    localStorage.clear();
+                    window.location.href = '/';
+                } else {
+                    alert('Failed to delete account');
+                }
+            });
+        }
+
+        function showMessage(elementId, text, type) {
+            const messageDiv = document.getElementById(elementId);
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/';
+        }
+
+        loadProfile();
+    </script>
+</body>
+
+</html>

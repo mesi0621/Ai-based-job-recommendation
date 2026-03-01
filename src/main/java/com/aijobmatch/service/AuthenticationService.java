@@ -30,6 +30,30 @@ public class AuthenticationService {
     }
     
     @Transactional
+    public AuthenticationResponse register(String fullName, String email, String phone, String password) {
+        // Check if user already exists
+        if (userRepository.existsByEmail(email)) {
+            throw new RuntimeException("Email already registered");
+        }
+        
+        // Create new user
+        User user = new User();
+        user.setFullName(fullName);
+        user.setEmail(email);
+        user.setPhone(phone);
+        user.setPasswordHash(passwordEncoder.encode(password));
+        user.setCreatedAt(LocalDateTime.now());
+        
+        // Save user
+        user = userRepository.save(user);
+        
+        // Generate JWT token
+        String token = jwtService.generateToken(email, false);
+        
+        return new AuthenticationResponse(token, user.getEmail(), user.getFullName(), user.getId());
+    }
+    
+    @Transactional
     public AuthenticationResponse authenticate(String email, String password, boolean rememberMe) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Invalid credentials"));

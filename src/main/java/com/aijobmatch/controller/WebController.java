@@ -40,4 +40,9 @@ public class WebController {
     public String applications() {
         return "applications";
     }
+    
+    @GetMapping("/profile")
+    public String profile() {
+        return "profile";
+    }
 }

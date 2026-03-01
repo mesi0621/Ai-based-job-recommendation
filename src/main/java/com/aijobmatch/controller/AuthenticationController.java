@@ -3,6 +3,7 @@ package com.aijobmatch.controller;
 import com.aijobmatch.dto.AuthenticationResponse;
 import com.aijobmatch.dto.LoginRequest;
 import com.aijobmatch.dto.PasswordResetRequest;
+import com.aijobmatch.dto.RegisterRequest;
 import com.aijobmatch.model.OAuthProvider;
 import com.aijobmatch.service.AuthenticationService;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,17 @@ public class AuthenticationController {
     
     public AuthenticationController(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
+    }
+    
+    @PostMapping("/register")
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
+        AuthenticationResponse response = authenticationService.register(
+                request.getFullName(),
+                request.getEmail(),
+                request.getPhone(),
+                request.getPassword()
+        );
+        return ResponseEntity.ok(response);
     }
     
     @PostMapping("/login")
