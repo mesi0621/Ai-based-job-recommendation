@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIJobMatch - AI-Powered Job Matching Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(26, 26, 46, 0.95);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: #00d4ff;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            margin-left: 2rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #00d4ff;
+        }
+
+        .hero {
+            padding: 8rem 2rem 6rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #00d4ff 0%, #7b2ff7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 3rem;
+            color: #b0b0b0;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00d4ff 0%, #7b2ff7 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #00d4ff;
+            border: 2px solid #00d4ff;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 212, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .features {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(26, 26, 46, 0.6);
+            padding: 2.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            text-align: center;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: #00d4ff;
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+        }
+
+        .feature-card h3 {
+            color: #00d4ff;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+
+        .feature-card p {
+            color: #b0b0b0;
+            line-height: 1.6;
+        }
+
+        .stats-section {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(26, 26, 46, 0.6);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(123, 47, 247, 0.3);
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #00d4ff 0%, #7b2ff7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: #b0b0b0;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        footer {
+            background: rgba(15, 12, 41, 0.8);
+            color: #b0b0b0;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+            border-top: 1px solid rgba(0, 212, 255, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="/" class="logo">🎯 AIJobMatch</a>
+            <div class="nav-links">
+                <a href="/jobs">Browse Jobs</a>
+                <a href="/login">Login</a>
+                <a href="/register">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>Find Your Dream Job with AI</h1>
+        <p>Smart matching, intelligent recommendations, and personalized career guidance</p>
+        <div class="cta-buttons">
+            <a href="/register" class="btn btn-primary">Get Started</a>
+            <a href="/jobs" class="btn btn-secondary">Browse Jobs</a>
+        </div>
+    </section>
+
+    <section class="stats-section">
+        <div class="stat-card">
+            <div class="stat-number">10K+</div>
+            <div class="stat-label">Active Jobs</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">5K+</div>
+            <div class="stat-label">Companies</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">50K+</div>
+            <div class="stat-label">Job Seekers</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">95%</div>
+            <div class="stat-label">Success Rate</div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="feature-card">
+            <div class="feature-icon">🤖</div>
+            <h3>Smart AI Matching</h3>
+            <p>Our AI analyzes your skills and experience to match you with the perfect opportunities</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">📄</div>
+            <h3>Resume Analyzer</h3>
+            <p>Upload your resume and get instant insights on your skills and qualifications</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>Skill Gap Analysis</h3>
+            <p>Discover which skills you need to develop for your target positions</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 AIJobMatch Platform. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>

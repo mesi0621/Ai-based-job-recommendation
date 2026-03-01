@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - AIJobMatch</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+        }
+
+        .navbar {
+            background: rgba(26, 26, 46, 0.95);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: #00d4ff;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            margin-left: 2rem;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: #00d4ff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .welcome {
+            background: rgba(26, 26, 46, 0.6);
+            padding: 2.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .welcome h1 {
+            color: #e0e0e0;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome p {
+            color: #b0b0b0;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(26, 26, 46, 0.6);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(123, 47, 247, 0.3);
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: #7b2ff7;
+            box-shadow: 0 10px 30px rgba(123, 47, 247, 0.3);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #00d4ff 0%, #7b2ff7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: #b0b0b0;
+            margin-top: 0.5rem;
+        }
+
+        .section {
+            background: rgba(26, 26, 46, 0.6);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .section h2 {
+            color: #00d4ff;
+            margin-bottom: 1.5rem;
+        }
+
+        .job-card {
+            background: rgba(15, 12, 41, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .job-card:hover {
+            transform: translateX(5px);
+            border-color: #00d4ff;
+            box-shadow: 0 5px 20px rgba(0, 212, 255, 0.2);
+        }
+
+        .job-title {
+            font-size: 1.2rem;
+            color: #e0e0e0;
+            margin-bottom: 0.5rem;
+        }
+
+        .job-company {
+            color: #b0b0b0;
+            margin-bottom: 0.5rem;
+        }
+
+        .match-score {
+            display: inline-block;
+            background: linear-gradient(135deg, #00d4ff 0%, #7b2ff7 100%);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #00d4ff 0%, #7b2ff7 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="/" class="logo">🎯 AIJobMatch</a>
+            <div class="nav-links">
+                <a href="/dashboard">Dashboard</a>
+                <a href="/jobs">Browse Jobs</a>
+                <a href="/resume">My Resume</a>
+                <a href="/applications">Applications</a>
+                <a onclick="logout()">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="welcome">
+            <h1>Welcome back, <span id="userName">User</span>!</h1>
+            <p>Here's your job search overview</p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="recommendedJobs">154</div>
+                <div class="stat-label">Recommended Jobs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="applications">320</div>
+                <div class="stat-label">Applications</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="interviews">96</div>
+                <div class="stat-label">Interviews</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="successRate">87%</div>
+                <div class="stat-label">Success Rate</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Top Job Recommendations</h2>
+            <div id="recommendations">
+                <p>Loading recommendations...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loadDashboard() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
+
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            document.getElementById('userName').textContent = user.fullName || 'User';
+
+            try {
+                const response = await fetch('/api/dashboard', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('recommendedJobs').textContent = data.statistics.recommendedJobsCount;
+                    document.getElementById('applications').textContent = data.statistics.applicationsCount;
+                    document.getElementById('interviews').textContent = data.statistics.interviewsCount;
+                    document.getElementById('successRate').textContent = data.statistics.successRate.toFixed(1) + '%';
+
+                    const recommendationsDiv = document.getElementById('recommendations');
+                    if (data.topRecommendations && data.topRecommendations.length > 0) {
+                        recommendationsDiv.innerHTML = data.topRecommendations.map(rec => `
+                            <div class="job-card">
+                                <div class="job-title">${rec.job.title}</div>
+                                <div class="job-company">${rec.job.company} - ${rec.job.location}</div>
+                                <span class="match-score">${rec.matchScore.toFixed(0)}% Match</span>
+                                <a href="/jobs/${rec.job.id}" class="btn" style="float: right;">View Details</a>
+                            </div>
+                        `).join('');
+                    } else {
+                        recommendationsDiv.innerHTML = '<p style="color: #b0b0b0;">No recommendations yet. Upload your resume to get started!</p>';
+                    }
+                } else if (response.status === 401) {
+                    localStorage.removeItem('token');
+                    window.location.href = '/login';
+                }
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/';
+        }
+
+        loadDashboard();
+    </script>
+</body>
+
+</html>

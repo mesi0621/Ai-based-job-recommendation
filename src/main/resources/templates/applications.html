@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Applications - AIJobMatch</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+        }
+
+        .navbar {
+            background: rgba(26, 26, 46, 0.95);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: #00d4ff;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            margin-left: 2rem;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: #00d4ff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .header {
+            background: rgba(26, 26, 46, 0.6);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            color: #00d4ff;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #b0b0b0;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            background: rgba(26, 26, 46, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            color: #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab:hover,
+        .tab.active {
+            background: linear-gradient(135deg, #00d4ff 0%, #7b2ff7 100%);
+            border-color: transparent;
+            color: white;
+        }
+
+        .applications-list {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .application-card {
+            background: rgba(26, 26, 46, 0.6);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        .application-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.2);
+        }
+
+        .application-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .job-info h3 {
+            color: #e0e0e0;
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .company-name {
+            color: #00d4ff;
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .location {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .status-pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.4);
+        }
+
+        .status-reviewing {
+            background: rgba(33, 150, 243, 0.2);
+            color: #2196f3;
+            border: 1px solid rgba(33, 150, 243, 0.4);
+        }
+
+        .status-interview {
+            background: rgba(156, 39, 176, 0.2);
+            color: #9c27b0;
+            border: 1px solid rgba(156, 39, 176, 0.4);
+        }
+
+        .status-accepted {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+            border: 1px solid rgba(76, 175, 80, 0.4);
+        }
+
+        .status-rejected {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+            border: 1px solid rgba(244, 67, 54, 0.4);
+        }
+
+        .application-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: rgba(15, 12, 41, 0.4);
+            border-radius: 10px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .detail-value {
+            color: #e0e0e0;
+            font-weight: 500;
+        }
+
+        .application-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00d4ff 0%, #7b2ff7 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #00d4ff;
+            border: 1px solid #00d4ff;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #888;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .timeline {
+            margin-top: 1rem;
+            padding-left: 1.5rem;
+            border-left: 2px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .timeline-item {
+            margin-bottom: 1rem;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.65rem;
+            top: 0.3rem;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #00d4ff;
+        }
+
+        .timeline-date {
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        .timeline-text {
+            color: #b0b0b0;
+            margin-top: 0.3rem;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="/" class="logo">🎯 AIJobMatch</a>
+            <div class="nav-links">
+                <a href="/dashboard">Dashboard</a>
+                <a href="/jobs">Browse Jobs</a>
+                <a href="/resume">My Resume</a>
+                <a href="/applications">Applications</a>
+                <a onclick="logout()">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1>My Applications</h1>
+            <p>Track your job applications and interview progress</p>
+        </div>
+
+        <div class="filter-tabs">
+            <div class="tab active" onclick="filterApplications('all')">All</div>
+            <div class="tab" onclick="filterApplications('pending')">Pending</div>
+            <div class="tab" onclick="filterApplications('reviewing')">Under Review</div>
+            <div class="tab" onclick="filterApplications('interview')">Interview</div>
+            <div class="tab" onclick="filterApplications('accepted')">Accepted</div>
+            <div class="tab" onclick="filterApplications('rejected')">Rejected</div>
+        </div>
+
+        <div class="applications-list" id="applicationsList">
+            <div class="empty-state">
+                <div class="empty-state-icon">📋</div>
+                <p>Loading applications...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allApplications = [];
+        let currentFilter = 'all';
+
+        async function loadApplications() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/applications', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    allApplications = await response.json();
+                    displayApplications(allApplications);
+                } else if (response.status === 401) {
+                    localStorage.removeItem('token');
+                    window.location.href = '/login';
+                } else {
+                    displayEmptyState('Error loading applications');
+                }
+            } catch (error) {
+                console.error('Error loading applications:', error);
+                displayEmptyState('Error loading applications');
+            }
+        }
+
+        function displayApplications(applications) {
+            const listDiv = document.getElementById('applicationsList');
+
+            if (applications.length === 0) {
+                displayEmptyState('No applications found');
+                return;
+            }
+
+            listDiv.innerHTML = applications.map(app => `
+                <div class="application-card">
+                    <div class="application-header">
+                        <div class="job-info">
+                            <h3>${app.job.title}</h3>
+                            <div class="company-name">${app.job.company}</div>
+                            <div class="location">📍 ${app.job.location}</div>
+                        </div>
+                        <div class="status-badge status-${app.status.toLowerCase()}">
+                            ${app.status}
+                        </div>
+                    </div>
+
+                    <div class="application-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Applied Date</div>
+                            <div class="detail-value">${formatDate(app.appliedDate)}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Match Score</div>
+                            <div class="detail-value">${app.matchScore}%</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Experience Required</div>
+                            <div class="detail-value">${app.job.experienceYears} years</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Salary Range</div>
+                            <div class="detail-value">${app.job.salaryRange || 'Not specified'}</div>
+                        </div>
+                    </div>
+
+                    ${app.timeline ? `
+                        <div class="timeline">
+                            ${app.timeline.map(item => `
+                                <div class="timeline-item">
+                                    <div class="timeline-date">${formatDate(item.date)}</div>
+                                    <div class="timeline-text">${item.event}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+
+                    <div class="application-actions">
+                        <button class="btn btn-primary" onclick="viewJobDetails(${app.job.id})">View Job</button>
+                        <button class="btn btn-secondary" onclick="withdrawApplication(${app.id})">Withdraw</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function displayEmptyState(message) {
+            const listDiv = document.getElementById('applicationsList');
+            listDiv.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">📋</div>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+
+        function filterApplications(status) {
+            currentFilter = status;
+
+            // Update active tab
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Filter applications
+            const filtered = status === 'all'
+                ? allApplications
+                : allApplications.filter(app => app.status.toLowerCase() === status);
+
+            displayApplications(filtered);
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        function viewJobDetails(jobId) {
+            window.location.href = `/jobs/${jobId}`;
+        }
+
+        async function withdrawApplication(appId) {
+            if (!confirm('Are you sure you want to withdraw this application?')) {
+                return;
+            }
+
+            const token = localStorage.getItem('token');
+            try {
+                const response = await fetch(`/api/applications/${appId}/withdraw`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    alert('Application withdrawn successfully');
+                    loadApplications();
+                } else {
+                    alert('Failed to withdraw application');
+                }
+            } catch (error) {
+                console.error('Error withdrawing application:', error);
+                alert('An error occurred');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/';
+        }
+
+        loadApplications();
+    </script>
+</body>
+
+</html>

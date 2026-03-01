@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Jobs - AIJobMatch</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+        }
+
+        .navbar {
+            background: rgba(26, 26, 46, 0.95);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: #00d4ff;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            margin-left: 2rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #00d4ff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .search-section {
+            background: rgba(26, 26, 46, 0.6);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .search-section h2 {
+            color: #00d4ff;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 0.9rem;
+            background: rgba(15, 12, 41, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            font-size: 1rem;
+            color: #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+        }
+
+        .search-box input::placeholder {
+            color: #666;
+        }
+
+        .btn {
+            padding: 0.9rem 2rem;
+            background: linear-gradient(135deg, #00d4ff 0%, #7b2ff7 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4);
+        }
+
+        .job-list {
+            background: rgba(26, 26, 46, 0.6);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .job-list h2 {
+            color: #00d4ff;
+            margin-bottom: 1.5rem;
+        }
+
+        .job-card {
+            background: rgba(15, 12, 41, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .job-card:hover {
+            border-color: #00d4ff;
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .job-title {
+            font-size: 1.3rem;
+            color: #e0e0e0;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .job-company {
+            color: #00d4ff;
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .job-location {
+            color: #b0b0b0;
+            font-size: 0.9rem;
+        }
+
+        .job-description {
+            color: #b0b0b0;
+            margin: 1rem 0;
+            line-height: 1.6;
+        }
+
+        .job-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .job-meta {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .match-score {
+            display: inline-block;
+            background: linear-gradient(135deg, #00d4ff 0%, #7b2ff7 100%);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-right: 1rem;
+            font-weight: 600;
+        }
+
+        .btn-small {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="/" class="logo">🎯 AIJobMatch</a>
+            <div class="nav-links">
+                <a href="/dashboard">Dashboard</a>
+                <a href="/jobs">Browse Jobs</a>
+                <a href="/resume">My Resume</a>
+                <a href="/applications">Applications</a>
+                <a href="/login">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="search-section">
+            <h2>Find Your Next Opportunity</h2>
+            <div class="search-box">
+                <input type="text" id="searchQuery" placeholder="Search by job title, company, or keywords...">
+                <button class="btn" onclick="searchJobs()">Search</button>
+            </div>
+        </div>
+
+        <div class="job-list">
+            <h2>Available Positions</h2>
+            <div id="jobsList">
+                <p style="color: #b0b0b0;">Loading jobs...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loadJobs(query = '') {
+            try {
+                const url = query ? `/api/jobs?query=${encodeURIComponent(query)}` : '/api/jobs';
+                const response = await fetch(url);
+
+                if (response.ok) {
+                    const jobs = await response.json();
+                    const jobsListDiv = document.getElementById('jobsList');
+
+                    if (jobs.length > 0) {
+                        jobsListDiv.innerHTML = jobs.map(job => `
+                            <div class="job-card">
+                                <div class="job-header">
+                                    <div>
+                                        <div class="job-title">${job.title}</div>
+                                        <div class="job-company">${job.company}</div>
+                                        <div class="job-location">📍 ${job.location}</div>
+                                    </div>
+                                </div>
+                                <div class="job-description">
+                                    ${job.description.substring(0, 200)}...
+                                </div>
+                                <div class="job-footer">
+                                    <div class="job-meta">
+                                        ${job.experienceYears} years experience • ${job.salaryRange || 'Salary not specified'}
+                                    </div>
+                                    <a href="/jobs/${job.id}" class="btn btn-small">View Details</a>
+                                </div>
+                            </div>
+                        `).join('');
+                    } else {
+                        jobsListDiv.innerHTML = '<p style="color: #b0b0b0;">No jobs found. Try a different search.</p>';
+                    }
+                } else {
+                    document.getElementById('jobsList').innerHTML = '<p style="color: #ff6b6b;">Error loading jobs. Please try again.</p>';
+                }
+            } catch (error) {
+                console.error('Error loading jobs:', error);
+                document.getElementById('jobsList').innerHTML = '<p style="color: #ff6b6b;">Error loading jobs. Please try again.</p>';
+            }
+        }
+
+        function searchJobs() {
+            const query = document.getElementById('searchQuery').value;
+            loadJobs(query);
+        }
+
+        document.getElementById('searchQuery').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchJobs();
+            }
+        });
+
+        loadJobs();
+    </script>
+</body>
+
+</html>

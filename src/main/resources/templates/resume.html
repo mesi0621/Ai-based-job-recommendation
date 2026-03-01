@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Resume - AIJobMatch</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+        }
+
+        .navbar {
+            background: rgba(26, 26, 46, 0.95);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: #00d4ff;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            margin-left: 2rem;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: #00d4ff;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .upload-section {
+            background: rgba(26, 26, 46, 0.6);
+            padding: 3rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        .upload-section h2 {
+            color: #00d4ff;
+            margin-bottom: 1rem;
+        }
+
+        .upload-section p {
+            color: #b0b0b0;
+            margin-bottom: 2rem;
+        }
+
+        .upload-area {
+            border: 2px dashed rgba(0, 212, 255, 0.4);
+            border-radius: 12px;
+            padding: 3rem;
+            background: rgba(15, 12, 41, 0.4);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: #00d4ff;
+            background: rgba(15, 12, 41, 0.6);
+        }
+
+        .upload-area.dragover {
+            border-color: #7b2ff7;
+            background: rgba(123, 47, 247, 0.1);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .upload-text {
+            color: #e0e0e0;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-hint {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #00d4ff 0%, #7b2ff7 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4);
+        }
+
+        .skills-section {
+            background: rgba(26, 26, 46, 0.6);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            backdrop-filter: blur(10px);
+            margin-bottom: 2rem;
+        }
+
+        .skills-section h3 {
+            color: #00d4ff;
+            margin-bottom: 1.5rem;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .skill-tag {
+            background: rgba(0, 212, 255, 0.2);
+            border: 1px solid rgba(0, 212, 255, 0.4);
+            padding: 0.6rem 1rem;
+            border-radius: 20px;
+            text-align: center;
+            color: #00d4ff;
+            font-size: 0.9rem;
+        }
+
+        .analysis-section {
+            background: rgba(26, 26, 46, 0.6);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .analysis-section h3 {
+            color: #00d4ff;
+            margin-bottom: 1.5rem;
+        }
+
+        .analysis-item {
+            background: rgba(15, 12, 41, 0.6);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .analysis-item h4 {
+            color: #e0e0e0;
+            margin-bottom: 0.5rem;
+        }
+
+        .analysis-item p {
+            color: #b0b0b0;
+            line-height: 1.6;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(15, 12, 41, 0.6);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #00d4ff 0%, #7b2ff7 100%);
+            transition: width 0.3s;
+        }
+
+        .message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .message.success {
+            background: rgba(50, 255, 50, 0.2);
+            color: #51cf66;
+            border: 1px solid rgba(50, 255, 50, 0.3);
+        }
+
+        .message.error {
+            background: rgba(255, 50, 50, 0.2);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 50, 50, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="/" class="logo">🎯 AIJobMatch</a>
+            <div class="nav-links">
+                <a href="/dashboard">Dashboard</a>
+                <a href="/jobs">Browse Jobs</a>
+                <a href="/resume">My Resume</a>
+                <a href="/applications">Applications</a>
+                <a onclick="logout()">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="upload-section">
+            <h2>Upload Your Resume</h2>
+            <p>Upload your resume to get AI-powered job recommendations and skill analysis</p>
+
+            <div id="message" class="message"></div>
+
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📄</div>
+                <div class="upload-text">Drag & Drop your resume here</div>
+                <div class="upload-hint">or click to browse (PDF, DOC, DOCX)</div>
+                <input type="file" id="fileInput" accept=".pdf,.doc,.docx">
+                <button class="btn" onclick="document.getElementById('fileInput').click()">Choose File</button>
+            </div>
+        </div>
+
+        <div class="skills-section" id="skillsSection" style="display: none;">
+            <h3>Your Skills</h3>
+            <div class="skills-grid" id="skillsGrid">
+                <!-- Skills will be populated here -->
+            </div>
+        </div>
+
+        <div class="analysis-section" id="analysisSection" style="display: none;">
+            <h3>Resume Analysis</h3>
+            <div id="analysisContent">
+                <!-- Analysis will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const messageDiv = document.getElementById('message');
+
+        // Drag and drop handlers
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFileUpload(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileUpload(e.target.files[0]);
+            }
+        });
+
+        async function handleFileUpload(file) {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
+
+            // Validate file type
+            const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+            if (!allowedTypes.includes(file.type)) {
+                showMessage('Please upload a PDF, DOC, or DOCX file', 'error');
+                return;
+            }
+
+            // Validate file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showMessage('File size must be less than 5MB', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/api/resume/upload', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    showMessage('Resume uploaded successfully!', 'success');
+                    displaySkills(data.skills);
+                    displayAnalysis(data.analysis);
+                } else {
+                    const error = await response.json();
+                    showMessage(error.message || 'Upload failed', 'error');
+                }
+            } catch (error) {
+                console.error('Upload error:', error);
+                showMessage('An error occurred during upload', 'error');
+            }
+        }
+
+        function showMessage(text, type) {
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function displaySkills(skills) {
+            if (!skills || skills.length === 0) return;
+
+            const skillsSection = document.getElementById('skillsSection');
+            const skillsGrid = document.getElementById('skillsGrid');
+
+            skillsGrid.innerHTML = skills.map(skill =>
+                `<div class="skill-tag">${skill}</div>`
+            ).join('');
+
+            skillsSection.style.display = 'block';
+        }
+
+        function displayAnalysis(analysis) {
+            if (!analysis) return;
+
+            const analysisSection = document.getElementById('analysisSection');
+            const analysisContent = document.getElementById('analysisContent');
+
+            analysisContent.innerHTML = `
+                <div class="analysis-item">
+                    <h4>Overall Score</h4>
+                    <p>Your resume scores ${analysis.score || 85}% based on our AI analysis</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${analysis.score || 85}%"></div>
+                    </div>
+                </div>
+                <div class="analysis-item">
+                    <h4>Strengths</h4>
+                    <p>${analysis.strengths || 'Strong technical skills and relevant experience'}</p>
+                </div>
+                <div class="analysis-item">
+                    <h4>Recommendations</h4>
+                    <p>${analysis.recommendations || 'Consider adding more quantifiable achievements and certifications'}</p>
+                </div>
+            `;
+
+            analysisSection.style.display = 'block';
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/';
+        }
+
+        // Load existing resume data if available
+        async function loadResumeData() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/resume', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.skills) displaySkills(data.skills);
+                    if (data.analysis) displayAnalysis(data.analysis);
+                }
+            } catch (error) {
+                console.error('Error loading resume data:', error);
+            }
+        }
+
+        loadResumeData();
+    </script>
+</body>
+
+</html>

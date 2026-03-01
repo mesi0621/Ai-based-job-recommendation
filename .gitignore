@@ -1,0 +1,65 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### Kiro ###
+.kiro/
+
+### Application ###
+application-local.properties
+*.log
+springboot.log
+springboot_error.log
+
+### Documentation and temporary files ###
+*.md
+!README.md
+!pom.xml
+*.txt
+*.bat
+*.ps1
+HELP.md
+FINAL_STATUS.md
+IMPLEMENTATION_SUMMARY.md
+INSTALL_AND_RUN.md
+LOMBOK_REMOVAL_STATUS.md
+PROJECT_OVERVIEW.md
+QUICK_START.md
+SYSTEM_DEMONSTRATION.md
+SYSTEM_OVERVIEW.md
+API_DEMO.md
+API_EXAMPLES.md
+BUILD_ISSUES.md
+complete-lombok-fix.txt
+fix-lombok.ps1
+run-simple.bat
